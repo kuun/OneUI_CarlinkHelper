@@ -130,8 +130,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 return false;
             }
         });
+        //开源仓库的settings.xml里没有赞赏入口
         PreferenceScreen donate = findPreference("donate");
-        donate.setOnPreferenceClickListener(this);
+        if (donate != null) {
+            donate.setOnPreferenceClickListener(this);
+        }
         PreferenceScreen about = findPreference("about");
         about.setOnPreferenceClickListener(this);
 
