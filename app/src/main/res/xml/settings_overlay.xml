@@ -14,6 +14,13 @@
         android:summary="@string/preference_enable_overlay" />
 
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:disableDependentsState="true"
+        android:key="overlay_auto_size"
+        android:summary="@string/preference_overlay_auto_size_summary"
+        android:title="@string/preference_overlay_auto_size" />
+
     <PreferenceCategory android:title="@string/preference_category_overlay_right">
 
         <SwitchPreferenceCompat
@@ -22,6 +29,7 @@
             android:title="@string/preference_enable_overlay_right" />
         <EditTextPreference
             android:defaultValue="Default text"
+            android:dependency="overlay_auto_size"
             android:key="overlay_right_width"
             android:title="@string/preference_width_right_overlay"
             app:defaultValue="480"
@@ -37,6 +45,7 @@
 
         <EditTextPreference
             android:defaultValue="Default text"
+            android:dependency="overlay_auto_size"
             android:key="overlay_left_width"
             android:title="@string/preference_width_left_overlay"
             app:defaultValue="160"

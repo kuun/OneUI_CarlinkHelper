@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public final class CarLinkData {
     public static final String sp_enable_overlay = "enable_overlay";
     public static final String sp_enable_overlay_right = "enable_overlay_right";
+    public static final String sp_overlay_auto_size = "overlay_auto_size";
     public static final String sp_overlay_right_width = "overlay_right_width";
     public static final String sp_enable_overlay_right_music_icon = "enable_overlay_right_music_icon";
     public static final String sp_overlay_left_width = "overlay_left_width";

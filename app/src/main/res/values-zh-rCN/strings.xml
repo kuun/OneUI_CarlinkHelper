@@ -7,6 +7,8 @@
     <string name="tab_theme">主题</string>
     <string name="preference_enable_overlay">覆盖视图</string>
     <string name="preference_enable_overlay_right">启用右侧窗口覆盖</string>
+    <string name="preference_overlay_auto_size">自动适配尺寸</string>
+    <string name="preference_overlay_auto_size_summary">按车机分辨率自动计算左侧Dock与右侧窗口的尺寸，关闭后可手动设置宽度</string>
     <string name="preference_width_right_overlay">右侧窗口宽度</string>
     <string name="preference_category_overlay_right">右侧窗口覆盖</string>
     <string name="preference_category_overlay_left">左侧Dock覆盖</string>

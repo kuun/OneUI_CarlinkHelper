@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.baidu.BaiduMap.ConstantData.CarLinkData;
+import com.baidu.BaiduMap.Utils.DiagLog;
 import com.baidu.BaiduMap.Utils.ApplicationUtil;
 import com.baidu.BaiduMap.Utils.LocationUtil;
 import com.baidu.BaiduMap.Utils.ToastUtil;
@@ -26,6 +27,7 @@ public class EntranceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DiagLog.log(this, "Entrance.onCreate");
         //setContentView(R.layout.activity_entrance);
         ApplicationUtil.initAppList(this);
         ApplicationUtil.initSettings(this);
@@ -41,6 +43,7 @@ public class EntranceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        DiagLog.log(this, "Entrance.onResume intent=" + getIntent());
         if (CarLinkData.getStringFromList(this, CarLinkData.sp_dock_map_pkg).equals(CarLinkData.pkgNameAmap)) {
             FakeStart.StartMiniMapBar(this);
         }else {

@@ -3,7 +3,6 @@ package com.baidu.BaiduMap.Widget.FloatView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.PixelFormat;
@@ -38,6 +37,7 @@ public class WidgetRight {
     public static View navbar_view;
     public boolean shown = false;
     private int radius;
+    private OverlayMetrics metrics;
     public static WidgetRight navBar;
 
     public static WidgetRight getInstance() {
@@ -62,7 +62,8 @@ public class WidgetRight {
         WindowMetrics windowMetrics = wm.getCurrentWindowMetrics();
         WindowInsets windowInsets = windowMetrics.getWindowInsets();
         Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() | WindowInsets.Type.displayCutout());
-        this.radius = (int) (insets.left * 0.55);
+        metrics = OverlayMetrics.from(context);
+        this.radius = (int) ((insets.left > 0 ? insets.left : metrics.dockWidth) * 0.55);
         navbar_view = View.inflate(context, R.layout.overlay_right, null);
         int opacity = (int) (Double.parseDouble(PreferenceManager.getDefaultSharedPreferences(context).getString("godmode_opacity", "100")) / 100 * 255);
         String rgb_string = PreferenceManager.getDefaultSharedPreferences(context).getString("godmode_rgb", "55#55#55");
@@ -70,13 +71,14 @@ public class WidgetRight {
         int trans = Color.argb(opacity, Integer.parseInt(rgb_array[0]), Integer.parseInt(rgb_array[1]), Integer.parseInt(rgb_array[2]));
         navbar_view.setBackgroundColor(trans);
         navbar_view.setFocusable(false);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(insets.left, WindowManager.LayoutParams.MATCH_PARENT,
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(metrics.rightWidth, WindowManager.LayoutParams.MATCH_PARENT,
                 2038,
                 262184,
                 PixelFormat.TRANSLUCENT);
 
         lp.gravity = Gravity.RIGHT | Gravity.TOP;
-        lp.setFitInsetsTypes(5);
+        //不避让任何系统栏，铺满虚拟屏整个高度
+        lp.setFitInsetsTypes(0);
 
         lp.token = null;
         lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -102,16 +104,17 @@ public class WidgetRight {
         setVisibility(true);
         CardView constraintLayout1 = (CardView) navbar_wrapper.getChildAt(1);
         LinearLayout.LayoutParams constraintLayoutLayoutParams = (LinearLayout.LayoutParams) constraintLayout1.getLayoutParams();
-        constraintLayoutLayoutParams.height = 350;
-        constraintLayoutLayoutParams.topMargin = 22;
+        //与Carlife原生卡片列一致: 导航卡片:音乐卡片 = 0.3:0.7
+        constraintLayoutLayoutParams.height = 0;
+        constraintLayoutLayoutParams.topMargin = metrics.cardMargin;
         constraintLayoutLayoutParams.gravity = Gravity.BOTTOM;
-        constraintLayoutLayoutParams.weight = 1;
+        constraintLayoutLayoutParams.weight = OverlayMetrics.MUSIC_CARD_WEIGHT;
         constraintLayout1.setLayoutParams(constraintLayoutLayoutParams);
 
         CardView cardView1 = (CardView) navbar_wrapper.getChildAt(0);
         LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) cardView1.getLayoutParams();
-        layoutParams1.height = 72;
-        layoutParams1.weight = 1;
+        layoutParams1.height = 0;
+        layoutParams1.weight = OverlayMetrics.NAVI_CARD_WEIGHT;
         cardView1.setLayoutParams(layoutParams1);
 
         LinearLayout naviBg = navbar_wrapper.findViewById(R.id.widget_right);
@@ -219,8 +222,7 @@ public class WidgetRight {
             //lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             //lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
-            SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(context);
-            lp.width = Integer.parseInt(s.getString("overlay_right_width", "480"));
+            lp.width = metrics.rightWidth;
             lp.verticalWeight = 1;
             wm.updateViewLayout(navbar_view, lp);
             Common.setBgRadius(navbar_view, 0);

@@ -21,11 +21,13 @@ import java.util.TimerTask;
 
 import com.baidu.BaiduMap.ConstantData.CarLinkData;
 import com.baidu.BaiduMap.MiniMapActivity;
+import com.baidu.BaiduMap.Utils.DiagLog;
 import com.baidu.BaiduMap.Widget.FloatView.NavBar;
 
 public class FakeStart {
 
     public static void Start(Context context, String pkgName) {
+        DiagLog.log(context, "FakeStart.Start");
         if (pkgName.equals(CarLinkData.pkgNameAmap)) {
             StartMiniMap(context);
         } else {
@@ -36,6 +38,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     private static void StartDefault(Context context, String pkgName) {
+        DiagLog.log(context, "FakeStart.StartDefault");
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(pkgName);
         if (launchIntent != null) {
             try {
@@ -51,6 +54,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartMiniMapToContext(Context context) {
+        DiagLog.log(context, "FakeStart.StartMiniMapToContext");
         Intent i = new Intent();
         i.setClass(context, MiniMapActivity.class);
         ActivityOptions ao = ActivityOptions.makeBasic();
@@ -61,6 +65,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartMiniMapToContext2(Context context) {
+        DiagLog.log(context, "FakeStart.StartMiniMapToContext2");
         if (CarLinkData.getStringFromList(context,CarLinkData.sp_dock_map_pkg).equals(CarLinkData.pkgNameAmap)) {
             StartMiniMapBar(context);
         }
@@ -82,6 +87,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartUcar(Context context, String pkgName) {
+        DiagLog.log(context, "FakeStart.StartUcar");
 
         if (pkgName.equals(CarLinkData.pkgNameAmap)) {
             StartMiniMap(context);
@@ -124,6 +130,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartCommon(Context context,String pkg) {
+        DiagLog.log(context, "FakeStart.StartCommon");
 
         ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         mActivityManager.killBackgroundProcesses(pkg);
@@ -158,6 +165,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartMiniMap(Context context) {
+        DiagLog.log(context, "FakeStart.StartMiniMap");
 
 
         String pkgName = CarLinkData.pkgNameAmap;
@@ -214,7 +222,9 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartMiniMapFunction(Context context, String uri) {
-
+        DiagLog.log(context, "FakeStart.StartMiniMapFunction from");
+        context = MiniMapActivity.launchContext(context);
+        DiagLog.log(context, "FakeStart.StartMiniMapFunction to uri=" + uri);
 
         String pkgName = CarLinkData.pkgNameAmap;
 
@@ -273,6 +283,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartMiniMapBar(Context context) {
+        DiagLog.log(context, "FakeStart.StartMiniMapBar");
         if(NavBar.getInstance()!=null){
             Message msg = Message.obtain();
             msg.what = 4;
@@ -345,6 +356,7 @@ public class FakeStart {
 
     @SuppressLint("WrongConstant")
     public static void StartUsingDeepLink(Context context, String packagename, String task) {
+        DiagLog.log(context, "FakeStart.StartUsingDeepLink");
         if (OpenProvider.isSupported(context)) {
 
             if (OpenProvider.isConnected(context)) {

@@ -77,6 +77,7 @@ public class NavBar {
     public static boolean isCharging = false;
     private int radius;
     private int iconsize;
+    private static OverlayMetrics metrics;
     private ImageView imageView_home;
     public static NavBar navBar;
     private updateTimeReceiver tiktok;
@@ -143,10 +144,13 @@ public class NavBar {
         WindowInsets windowInsets = windowMetrics.getWindowInsets();
         Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() | WindowInsets.Type.displayCutout());
 
-        this.radius = (int) (insets.left * 0.55);
+        metrics = OverlayMetrics.from(context);
+        //虚拟屏没有上报inset时，以Dock宽度为基准
+        int base = insets.left > 0 ? insets.left : metrics.dockWidth;
+        this.radius = (int) (base * 0.55);
         this.iconsize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("godmodeiconsize", "0"));
         if (iconsize == 0) {
-            this.iconsize = (int) (insets.left * 0.55);
+            this.iconsize = (int) (base * 0.55);
         }
         isCharging = isCharging(context);
 
@@ -168,13 +172,14 @@ public class NavBar {
         context.registerReceiver(tiktok, new IntentFilter(Intent.ACTION_TIME_TICK));
 
 
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(insets.left, WindowManager.LayoutParams.MATCH_PARENT,
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(metrics.dockWidth, WindowManager.LayoutParams.MATCH_PARENT,
                 2038,
                 262184,
                 PixelFormat.TRANSLUCENT);
 
         lp.gravity = Gravity.LEFT | Gravity.TOP;
-        lp.setFitInsetsTypes(5);
+        //不避让任何系统栏，铺满虚拟屏整个高度
+        lp.setFitInsetsTypes(0);
 
 
         lp.windowAnimations = R.style.anim_notification;
@@ -213,13 +218,13 @@ public class NavBar {
         dockContainer.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 45);
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), metrics.scale(45));
             }
         });
         dockContainer.setClipToOutline(true);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dockContainer.getLayoutParams();
-        layoutParams.setMargins(12, 26, 12, 26);
+        layoutParams.setMargins(metrics.scale(12), metrics.scale(26), metrics.scale(12), metrics.scale(26));
         dockContainer.setLayoutParams(layoutParams);
         dockRootView.setBackgroundColor(context.getColor(R.color.black));
 
@@ -456,7 +461,7 @@ public class NavBar {
                                     ((LinearLayout) dockContainer.getParent()).setAlpha(0.f);
                                 }
 
-                                layoutParams1.height = 80;
+                                layoutParams1.height = metrics.scale(80);
                                 dockContainer.setLayoutParams(layoutParams1);
                                 if (WidgetRight.navbar_view != null) {
                                     if (WidgetRight.navbar_view.getVisibility() == View.INVISIBLE) {
@@ -686,9 +691,7 @@ public class NavBar {
 
     private void setVisibility(Boolean visible) {
         WindowManager.LayoutParams lp = (WindowManager.LayoutParams) navbar_view.getLayoutParams();
-        SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(context);
-//        int widthLeft = Integer.parseInt(s.getString("overlay_left_width", "160"));
-        lp.width = CarLinkData.getIntFromString(context, CarLinkData.sp_overlay_left_width, 160);
+        lp.width = metrics.dockWidth;
         if (visible) {
 
             lp.height = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -907,7 +910,7 @@ public class NavBar {
 //                dockContainer.setClipToOutline(true);
 //
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dockContainer.getLayoutParams();
-                layoutParams.setMargins(12, 12, 12, 12);
+                layoutParams.setMargins(metrics.scale(12), metrics.scale(12), metrics.scale(12), metrics.scale(12));
                 dockContainer.setLayoutParams(layoutParams);
                 switch (CarLinkData.getString(context, CarLinkData.sp_theme_dock_pic)) {
                     case "0":
@@ -938,13 +941,13 @@ public class NavBar {
                 dockContainer.setOutlineProvider(new ViewOutlineProvider() {
                     @Override
                     public void getOutline(View view, Outline outline) {
-                        outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 45);
+                        outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), metrics.scale(45));
                     }
                 });
                 dockContainer.setClipToOutline(true);
 
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dockContainer.getLayoutParams();
-                layoutParams.setMargins(12, 26, 12, 26);
+                layoutParams.setMargins(metrics.scale(12), metrics.scale(26), metrics.scale(12), metrics.scale(26));
                 dockContainer.setLayoutParams(layoutParams);
 
                 dockRootView.setBackgroundColor(context.getColor(R.color.black));

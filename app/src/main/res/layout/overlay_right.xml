@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#FF000000"
-    android:paddingHorizontal="6dp"
-    android:paddingVertical="16dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="12dp"
+    android:paddingVertical="12dp"
     android:id="@+id/right_root">
 
             <LinearLayout
